@@ -1,22 +1,30 @@
 package telran.interviews;
 
-//all methods should have O[1] complexity
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 public class ConnectionPool {
-	// TODO Data Structure
+	 int size;
+   LinkedHashMap<Long, Connection> map;
+
 	public ConnectionPool(int size) {
-		// TODO
+		this.size = size;
+		this.map = new LinkedHashMap<Long, Connection>(size, 0.75f, true) {
+
+			@Override
+			protected boolean removeEldestEntry(Map.Entry<Long, Connection> e) {
+				return size() > ConnectionPool.this.size;
+			}
+		};
 	}
 
 	public Connection getConnection(Connection connection) {
-		// TODO return a connection from the pool if it exists
-		// otherwise creates new connection, adds in pool and returns new created
-		// connection
-		return null;
+		return map.computeIfAbsent(connection.id(), k -> connection);
 	}
 
 	public boolean isInPool(long id) {
-		// TODO returns true if a given connection exists in the pool
-		// otherwise returns false
-		return false;
+		return map.containsKey(id);
 	}
+
+	
 }
