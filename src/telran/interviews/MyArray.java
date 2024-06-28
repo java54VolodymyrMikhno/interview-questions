@@ -1,28 +1,37 @@
 package telran.interviews;
 
+import java.util.*;
+
 //all methods must have complexity O[1]
 public class MyArray<T> {
-	// TODO Data Structure
+	Map<Integer, T> map;
+	int size;
+	T defaultValue;
+
+	public MyArray(int size) {
+		this.size = size;
+		this.map = new HashMap<>();
+	}
+
 	public void setAll(T value) {
-		// TODO
-		// all array's elements should be set with a given value
+		map.clear();
+		defaultValue = value;
 	}
 
 	public void set(int index, T value) {
-		// TODO
-		// set new value at a given index
-		// throws ArrayIndexOutOfBoundsException for incorrect index
+		checkIndex(index);
+		map.put(index, value);
+	}
+
+	private void checkIndex(int index) {
+		if (index < 0 || index >= size) {
+			throw new ArrayIndexOutOfBoundsException(index);
+		}
 	}
 
 	public T get(int index) {
-		// TODO
-		// returns a value at a given index
-		// throws ArrayIndexOutOfBoundsException for incorrect index
-		return null;
+		checkIndex(index);
+		return map.getOrDefault(index, defaultValue);
 	}
 
-	public MyArray(int size) {
-		// TODO creates the Array object for a given size
-		// with setting null's at each element
-	}
 }
