@@ -34,14 +34,13 @@ public class InterviewQuestions {
 
 	static public boolean isSum2(int[] array, int sum) {
 		Set<Integer> numbers = new HashSet<>();
-		boolean res = false;
-		for (int num : array) {
-			if (numbers.contains(sum - num)) {
-				res = true;
-			}
-			numbers.add(num);
+		int i = 0;
+		while (i < array.length && !numbers.contains(array[i])) {
+
+			numbers.add(sum - array[i]);
+			i++;
 		}
-		return res;
+		return i != array.length;
 	}
 
 	static public int getMaxWithNegativePresentation(int[] array) {

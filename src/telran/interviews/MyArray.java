@@ -14,7 +14,6 @@ public class MyArray<T> {
 	}
 
 	public void setAll(T value) {
-		map.clear();
 		defaultValue = value;
 	}
 
