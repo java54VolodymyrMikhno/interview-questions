@@ -9,7 +9,7 @@ public class ConnectionPool {
 
 	public ConnectionPool(int size) {
 		this.size = size;
-		this.map = new LinkedHashMap<Long, Connection>(size, 0.75f, true) {
+		map = new LinkedHashMap<Long, Connection>(size, 0.75f, true) {
 
 			@Override
 			protected boolean removeEldestEntry(Map.Entry<Long, Connection> e) {
