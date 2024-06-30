@@ -15,6 +15,7 @@ public class MyArray<T> {
 
 	public void setAll(T value) {
 		defaultValue = value;
+		map = new HashMap<>();
 	}
 
 	public void set(int index, T value) {

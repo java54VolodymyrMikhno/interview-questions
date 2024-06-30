@@ -13,7 +13,12 @@ class MyArrayTest {
     void setUp() {
         array = new MyArray<>(5);
     }
-
+@Test
+void test() {
+	array.set(0, 10); array.setAll(5);
+	assertEquals(5, array.get(0));
+	
+}
     @Test
     void testSetAndGet() {
         array.set(0, 10);
