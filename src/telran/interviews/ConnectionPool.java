@@ -3,28 +3,27 @@ package telran.interviews;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+//all methods should have O[1] complexity
 public class ConnectionPool {
-	 int size;
-   LinkedHashMap<Long, Connection> map;
-
+	private LinkedHashMap<Long, Connection> pool;
+	@SuppressWarnings("serial")
 	public ConnectionPool(int size) {
-		this.size = size;
-		map = new LinkedHashMap<Long, Connection>(size, 0.75f, true) {
-
+		pool = new LinkedHashMap<>(16, 0.75f, true) {
 			@Override
-			protected boolean removeEldestEntry(Map.Entry<Long, Connection> e) {
-				return size() > ConnectionPool.this.size;
+			protected boolean removeEldestEntry(Map.Entry<Long, Connection> entry) {
+				return size() > size;
 			}
 		};
 	}
-
-	public Connection getConnection(Connection connection) {
-		return map.computeIfAbsent(connection.id(), k -> connection);
-	}
-
-	public boolean isInPool(long id) {
-		return map.containsKey(id);
-	}
-
-	
+public Connection getConnection(Connection connection) {
+	//return a connection from the pool if it exists
+	//otherwise creates new connection, adds in pool and returns new created connection
+	long id = connection.id();
+	return pool.computeIfAbsent(id, k -> new Connection(id));
+}
+public boolean isInPool(long id) {
+	// returns true if  a given connection exists in the pool
+	//otherwise returns false
+	return pool.containsKey(id);
+}
 }

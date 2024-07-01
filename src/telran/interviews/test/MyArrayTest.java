@@ -4,46 +4,45 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import telran.interviews.MyArray;
 
 class MyArrayTest {
-    private MyArray<Integer> array;
-
-    @BeforeEach
-    void setUp() {
-        array = new MyArray<>(5);
-    }
-@Test
-void test() {
-	array.set(0, 10); array.setAll(5);
-	assertEquals(5, array.get(0));
+private static final int N_ELEMENTS = 100_000_000;
+private static final Integer ALL_VALUES = 5;
+MyArray<Integer> myArray;
+@BeforeEach
+void setUp() {
+	myArray = new MyArray<>(N_ELEMENTS);
 	
 }
-    @Test
-    void testSetAndGet() {
-        array.set(0, 10);
-        array.set(1, 20);
-        assertEquals(10, array.get(0));
-        assertEquals(20, array.get(1));
-    }
+	@Test
+	void setAllTest() {
+		runSetAllTest();
+	}
+	@Test
+	void setGetTest() {
+		int index = 10;
+		int value = 1000;
+		myArray.set(index, value);
+		assertEquals(value, myArray.get(index));
+		assertNull(myArray.get(index + 1));
+		assertThrowsExactly(ArrayIndexOutOfBoundsException.class,
+				() -> myArray.set(-index, value));
+		assertThrowsExactly(ArrayIndexOutOfBoundsException.class,
+				() -> myArray.set(N_ELEMENTS, value));
+		assertThrowsExactly(ArrayIndexOutOfBoundsException.class,
+				() -> myArray.get(-index));
+		assertThrowsExactly(ArrayIndexOutOfBoundsException.class,
+				() -> myArray.get(N_ELEMENTS));
+		runSetAllTest();
+		
+	}
+	private void runSetAllTest() {
+		myArray.setAll(ALL_VALUES);
+		for(int i = 0; i < N_ELEMENTS; i++) {
+			assertEquals(ALL_VALUES, myArray.get(i));
+		}
+	}
 
-    @Test
-    void testSetAll() {
-        array.setAll(5);
-        for (int i = 0; i < 5; i++) {
-            assertEquals(5, array.get(i));
-        }
-    }
-
-    @Test
-    void testSetOutOfBounds() {
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> array.set(5, 10));
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> array.set(-1, 10));
-    }
-
-    @Test
-    void testGetOutOfBounds() {
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> array.get(5));
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> array.get(-1));
-    }
 }
