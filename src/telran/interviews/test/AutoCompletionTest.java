@@ -18,7 +18,7 @@ String [] wordsAa = {"aaA"};
 			autoCompletion.addWord(word);
 		}
 		assertArrayEquals(wordsAb, autoCompletion.getVariants("ab"));
-//		assertArrayEquals(wordsAv, autoCompletion.getVariants("av"));
+		assertArrayEquals(wordsAv, autoCompletion.getVariants("av"));
 		assertArrayEquals(wordsAa, autoCompletion.getVariants("aa"));
 	}
 
