@@ -3,7 +3,7 @@ package telran.interviews;
 import java.util.*;
 
 public class AutoCompletion {
-	TreeSet<String> words = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+	TreeSet<String> words = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
 	public boolean addWord(String word) {
 		return words.add(word);
