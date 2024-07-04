@@ -3,15 +3,13 @@ package telran.interviews;
 import java.util.*;
 
 public class AutoCompletion {
-	TreeSet<String> set = new TreeSet<>(String::compareToIgnoreCase);
+	TreeSet<String> words = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 
 	public boolean addWord(String word) {
-		return set.add(word);
+		return words.add(word);
 	}
 
 	public String[] getVariants(String prefix) {
-		SortedSet<String> subset = set.subSet(prefix, prefix + Character.MAX_VALUE);
-		Comparator<String> cmp = Comparator.comparingInt(String::length);
-		return subset.stream().sorted(cmp).toArray(String[]::new);
+		return words.subSet(prefix, prefix + Character.MAX_VALUE).toArray(String[]::new);
 	}
 }
