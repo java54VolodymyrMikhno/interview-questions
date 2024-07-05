@@ -91,8 +91,8 @@ class InterviewQuestionsTests {
 	void isAnagramTest() {
 		String word = "hello";
 		assertTrue(isAnagram(word, "elloh"));
-		assertTrue(isAnagram(word, "hleoh"));
-		assertTrue(isAnagram(word, "hleohl"));
+		assertTrue(isAnagram(word, "hleol"));
+		assertTrue(isAnagram(word, "hlloe"));
 		assertFalse(isAnagram(word, word));
 		assertFalse(isAnagram(word, "olle"));
 		assertFalse(isAnagram(word, "ollhh"));

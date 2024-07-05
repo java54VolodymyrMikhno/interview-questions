@@ -2,6 +2,8 @@ package telran.interviews;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class InterviewQuestions {
@@ -77,28 +79,53 @@ public class InterviewQuestions {
 				.collect(Collectors.toMap(n -> n, n -> n * n, (v1, v2) -> v1, LinkedHashMap::new));
 		return res;
 	}
-	public static boolean isAnagram(String word,String anagram) {
-		//TODO
-		//returns true if"anagram"string contains all letters from"word" in another order(case sensitive)
-		//O[n}(sorting is disallowed)
-		return false;
+
+	public static boolean isAnagram(String word, String anagram) {
+		// TODO
+		// returns true if"anagram"string contains all letters from"word" in another
+		// order(case sensitive)
+		// O[n}(sorting is disallowed)
+		boolean res = true;
+		if (word.length() != anagram.length() || word.equals(anagram)) {
+			res = false;
+		} else {
+			Map<Integer, Long> mapWordCount = word.chars().mapToObj(c -> c)
+					.collect(Collectors.groupingBy(c -> c, Collectors.counting()));
+			var mapAnagramCount = anagram.chars().boxed()
+					.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+			res = mapWordCount.equals(mapAnagramCount);
+
+		}
+		return res;
 	}
-	public static List<DateRole> assignRoleDates(List<DateRole> rolesHistory,List<LocalDate> dates){
-		//TODO
-		//create List <DateRole>with roles matching the given dates
-		//most effective data structure
-		return null;
-		
+
+	public static List<DateRole> assignRoleDates(List<DateRole> rolesHistory, List<LocalDate> dates) {
+		TreeMap<LocalDate, String> roleMap = new TreeMap<>();
+		for (DateRole dateRole : rolesHistory) {
+			roleMap.put(dateRole.date(), dateRole.role());
+		}
+
+		List<DateRole> result = new ArrayList<>();
+		for (LocalDate date : dates) {
+			Entry<LocalDate, String> entry = roleMap.floorEntry(date);
+			String role = (entry != null) ? entry.getValue() : null;
+			result.add(new DateRole(date, role));
+		}
+
+		return result;
+
 	}
+
 	public static void displayDigitsStatistics() {
-		//TODO
-		//display out statistics in the following format(example)
+		// TODO
+		// display out statistics in the following format(example)
 		// 1-><count of occurrences>
 		// 2-><count of occurrences>
 		// 3-><count of occurrences>
-		//sorted by counts of occurrences in the descending order
-		//takes 1000000 random numbers in range[0-Integer.MAX_VALUE]
-		//one pipeline with no additional yours methods
+		// sorted by counts of occurrences in the descending order
+		// takes 1000000 random numbers in range[0-Integer.MAX_VALUE]
+		// one pipeline with no additional yours methods
+
 	}
-	
+
 }
