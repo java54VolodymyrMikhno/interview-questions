@@ -7,6 +7,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class InterviewQuestions {
+	private static final long N_NUMBERS = 1000000;
+
 	public static void displayOccurrences(String[] strings) {
 		HashMap<String, Integer> mapOccurrences = getOccurrencesMap(strings);
 		TreeMap<Integer, TreeSet<String>> treeMapOccurrences = getTreeMapOccurrences(mapOccurrences);
@@ -125,6 +127,15 @@ public class InterviewQuestions {
 		// sorted by counts of occurrences in the descending order
 		// takes 1000000 random numbers in range[0-Integer.MAX_VALUE]
 		// one pipeline with no additional yours methods
+		new Random()
+		        .ints(1000000, 0, Integer.MAX_VALUE)
+		        .flatMap(n -> String.valueOf(n).chars())
+				.mapToObj(c -> Character.valueOf((char) c))
+				.collect(Collectors.groupingBy(c -> c, Collectors.counting()))
+				.entrySet()
+				.stream()
+				.sorted((e, e1) -> e1.getValue().compareTo(e.getValue()))
+				.forEach(e -> System.out.printf("%s -> %d\n", e.getKey(), e.getValue()));
 
 	}
 
