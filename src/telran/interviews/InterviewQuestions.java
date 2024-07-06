@@ -2,9 +2,8 @@ package telran.interviews;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.Map.Entry;
-import java.util.function.Function;
 import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 
 public class InterviewQuestions {
 	private static final long N_NUMBERS = 1000000;
@@ -105,15 +104,15 @@ public class InterviewQuestions {
 			roleMap.put(dateRole.date(), dateRole.role());
 		}
 
-		List<DateRole> result = new ArrayList<>();
-		for (LocalDate date : dates) {
-			Entry<LocalDate, String> entry = roleMap.floorEntry(date);
-			String role = (entry != null) ? entry.getValue() : null;
-			result.add(new DateRole(date, role));
-		}
+		return 
+				dates.stream()
+				.map(date -> new DateRole(date, getRoleForDate(roleMap, date)))
+				.collect(toList());
 
-		return result;
+	}
 
+	private static String getRoleForDate(TreeMap<LocalDate, String> roleMap, LocalDate date) {
+		return roleMap.floorEntry(date)==null?null:roleMap.floorEntry(date).getValue();
 	}
 
 	public static void displayDigitsStatistics() {
