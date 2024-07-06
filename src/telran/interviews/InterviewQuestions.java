@@ -87,18 +87,16 @@ public class InterviewQuestions {
 		// returns true if"anagram"string contains all letters from"word" in another
 		// order(case sensitive)
 		// O[n}(sorting is disallowed)
-		boolean res = true;
-		if (word.length() != anagram.length() || word.equals(anagram)) {
-			res = false;
-		} else {
-			Map<Integer, Long> mapWordCount = word.chars().mapToObj(c -> c)
-					.collect(Collectors.groupingBy(c -> c, Collectors.counting()));
-			var mapAnagramCount = anagram.chars().boxed()
-					.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-			res = mapWordCount.equals(mapAnagramCount);
-
+		boolean res = false;
+		if (word.length() == anagram.length() && !word.equals(anagram)) {
+			res = countingChars(word).equals(countingChars(anagram));
 		}
 		return res;
+	}
+
+	private static Map<Integer, Long> countingChars(String word) {
+		return word.chars().mapToObj(c -> c)
+				.collect(Collectors.groupingBy(c -> c, Collectors.counting()));
 	}
 
 	public static List<DateRole> assignRoleDates(List<DateRole> rolesHistory, List<LocalDate> dates) {
@@ -128,9 +126,10 @@ public class InterviewQuestions {
 		// takes 1000000 random numbers in range[0-Integer.MAX_VALUE]
 		// one pipeline with no additional yours methods
 		new Random()
-		        .ints(1000000, 0, Integer.MAX_VALUE)
+		        .ints(N_NUMBERS, 0, Integer.MAX_VALUE)
 		        .flatMap(n -> String.valueOf(n).chars())
-				.mapToObj(c -> Character.valueOf((char) c))
+				.mapToObj(c -> (char) c)
+				.filter(c -> c != '0')
 				.collect(Collectors.groupingBy(c -> c, Collectors.counting()))
 				.entrySet()
 				.stream()
