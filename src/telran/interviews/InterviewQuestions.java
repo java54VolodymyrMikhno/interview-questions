@@ -82,20 +82,15 @@ public class InterviewQuestions {
 	}
 
 	public static boolean isAnagram(String word, String anagram) {
-		// TODO
-		// returns true if"anagram"string contains all letters from"word" in another
-		// order(case sensitive)
-		// O[n}(sorting is disallowed)
 		boolean res = false;
-		if (word.length() == anagram.length() && !word.equals(anagram)) {
-			res = countingChars(word).equals(countingChars(anagram));
+		if (word.length() == anagram.length() && !Objects.equals(word, anagram)) {
+			Map<Integer,Integer> map = new HashMap<>();
+			word.chars().forEach(c -> map.put(c, map.getOrDefault(c, 0) + 1));
+			anagram.chars().forEach(c -> map.put(c, map.getOrDefault(c, 0) - 1));
+			res= map.values().stream().allMatch(x -> x == 0);
 		}
 		return res;
-	}
 
-	private static Map<Integer, Long> countingChars(String word) {
-		return word.chars().mapToObj(c -> c)
-				.collect(Collectors.groupingBy(c -> c, Collectors.counting()));
 	}
 
 	public static List<DateRole> assignRoleDates(List<DateRole> rolesHistory, List<LocalDate> dates) {
@@ -104,15 +99,12 @@ public class InterviewQuestions {
 			roleMap.put(dateRole.date(), dateRole.role());
 		}
 
-		return 
-				dates.stream()
-				.map(date -> new DateRole(date, getRoleForDate(roleMap, date)))
-				.collect(toList());
+		return dates.stream().map(date -> new DateRole(date, getRoleForDate(roleMap, date))).collect(toList());
 
 	}
 
 	private static String getRoleForDate(TreeMap<LocalDate, String> roleMap, LocalDate date) {
-		return roleMap.floorEntry(date)==null?null:roleMap.floorEntry(date).getValue();
+		return roleMap.floorEntry(date) == null ? null : roleMap.floorEntry(date).getValue();
 	}
 
 	public static void displayDigitsStatistics() {
@@ -124,14 +116,9 @@ public class InterviewQuestions {
 		// sorted by counts of occurrences in the descending order
 		// takes 1000000 random numbers in range[0-Integer.MAX_VALUE]
 		// one pipeline with no additional yours methods
-		new Random()
-		        .ints(N_NUMBERS, 0, Integer.MAX_VALUE)
-		        .flatMap(n -> String.valueOf(n).chars())
-				.mapToObj(c -> (char) c)
-				.filter(c -> c != '0')
-				.collect(Collectors.groupingBy(c -> c, Collectors.counting()))
-				.entrySet()
-				.stream()
+		new Random().ints(N_NUMBERS, 0, Integer.MAX_VALUE).flatMap(n -> String.valueOf(n).chars())
+				.mapToObj(c -> (char) c).filter(c -> c != '0')
+				.collect(Collectors.groupingBy(c -> c, Collectors.counting())).entrySet().stream()
 				.sorted((e, e1) -> e1.getValue().compareTo(e.getValue()))
 				.forEach(e -> System.out.printf("%s -> %d\n", e.getKey(), e.getValue()));
 
