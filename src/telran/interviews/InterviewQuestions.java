@@ -82,26 +82,14 @@ public class InterviewQuestions {
 	}
 
 	public static boolean isAnagram(String word, String anagram) {
-		boolean res = true;
-        if (word.length() != anagram.length() || Objects.equals(word, anagram)) {
-            res = false;
-        } else {
-            Map<Character, Integer> map = new HashMap<>();
-            word.chars().forEach(c -> map.put((char) c, map.getOrDefault((char) c, 0) + 1));
-            int i = 0 ;
-            char c;
-            while (i < anagram.length() && res) {
-            	 c = anagram.charAt(i);
-                if (!map.containsKey(c) || map.get(c) == 0) {
-                    res = false;
-                } else {
-                    map.put(c, map.get(c) - 1);
-                }
-                i++;
-            }
-        }
+		boolean res = false;
+		if (word.length() == anagram.length() && !Objects.equals(word, anagram)) {
 
-        return res;
+			Map<Integer, Long> map = word.chars().collect(HashMap::new, (m, c) -> m.merge(c, 1L, Long::sum),
+					HashMap::putAll);
+			res = anagram.chars().allMatch(c -> map.merge(c, -1L, Long::sum) >= 0);
+		}
+		return res;
 	}
 
 	public static List<DateRole> assignRoleDates(List<DateRole> rolesHistory, List<LocalDate> dates) {
