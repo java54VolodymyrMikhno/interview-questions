@@ -82,23 +82,31 @@ public class InterviewQuestions {
 	}
 
 	public static boolean isAnagram(String word, String anagram) {
-		boolean res = false;
-		if (word.length() == anagram.length() && !Objects.equals(word, anagram)) {
-			Map<Integer,Integer> map = new HashMap<>();
-			word.chars().forEach(c -> map.put(c, map.getOrDefault(c, 0) + 1));
-			anagram.chars().forEach(c -> map.put(c, map.getOrDefault(c, 0) - 1));
-			res= map.values().stream().allMatch(x -> x == 0);
-		}
-		return res;
+		boolean res = true; // Initialize result as true
+        if (word.length() != anagram.length() || Objects.equals(word, anagram)) {
+            res = false;
+        } else {
+            Map<Character, Integer> map = new HashMap<>();
+            word.chars().forEach(c -> map.put((char) c, map.getOrDefault((char) c, 0) + 1));
+            int i = 0 ;
+            char c;
+            while (i < anagram.length() && res) {
+            	 c = anagram.charAt(i);
+                if (!map.containsKey(c) || map.get(c) == 0) {
+                    res = false;
+                } else {
+                    map.put(c, map.get(c) - 1);
+                }
+                i++;
+            }
+        }
 
+        return res;
 	}
 
 	public static List<DateRole> assignRoleDates(List<DateRole> rolesHistory, List<LocalDate> dates) {
-		TreeMap<LocalDate, String> roleMap = new TreeMap<>();
-		for (DateRole dateRole : rolesHistory) {
-			roleMap.put(dateRole.date(), dateRole.role());
-		}
-
+		TreeMap<LocalDate, String> roleMap = rolesHistory.stream()
+				.collect(Collectors.toMap(r -> r.date(), r -> r.role(), (v1, v2) -> v1, TreeMap::new));
 		return dates.stream().map(date -> new DateRole(date, getRoleForDate(roleMap, date))).collect(toList());
 
 	}
@@ -117,9 +125,8 @@ public class InterviewQuestions {
 		// takes 1000000 random numbers in range[0-Integer.MAX_VALUE]
 		// one pipeline with no additional yours methods
 		new Random().ints(N_NUMBERS, 0, Integer.MAX_VALUE).flatMap(n -> String.valueOf(n).chars())
-				.mapToObj(c -> (char) c).filter(c -> c != '0')
-				.collect(Collectors.groupingBy(c -> c, Collectors.counting())).entrySet().stream()
-				.sorted((e, e1) -> e1.getValue().compareTo(e.getValue()))
+				.mapToObj(c -> (char) c).collect(Collectors.groupingBy(c -> c, Collectors.counting())).entrySet()
+				.stream().sorted((e, e1) -> e1.getValue().compareTo(e.getValue()))
 				.forEach(e -> System.out.printf("%s -> %d\n", e.getKey(), e.getValue()));
 
 	}
