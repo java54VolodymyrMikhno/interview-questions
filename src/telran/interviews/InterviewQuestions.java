@@ -2,6 +2,8 @@ package telran.interviews;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
@@ -83,24 +85,21 @@ public class InterviewQuestions {
 
 	public static boolean isAnagram(String word, String anagram) {
 		boolean res = false;
-		if (word.length() == anagram.length() && !Objects.equals(word, anagram)) {
-
-			Map<Integer, Long> map = word.chars().collect(HashMap::new, (m, c) -> m.merge(c, 1L, Long::sum),
-					HashMap::putAll);
-			res = anagram.chars().allMatch(c -> map.merge(c, -1L, Long::sum) >= 0);
+		if (word.length() == anagram.length() && !word.equals(anagram)) {
+			Map<String, Long> map = Arrays.stream(word.split(""))
+					.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+			res = Arrays.stream(anagram.split("")).allMatch(s -> map.compute(s, (k, v) -> v == null ? -1 : v - 1) >= 0);
 		}
 		return res;
 	}
 
 	public static List<DateRole> assignRoleDates(List<DateRole> rolesHistory, List<LocalDate> dates) {
-		TreeMap<LocalDate, String> roleMap = rolesHistory.stream()
-				.collect(Collectors.toMap(r -> r.date(), r -> r.role(), (v1, v2) -> v1, TreeMap::new));
-		return dates.stream().map(date -> new DateRole(date, getRoleForDate(roleMap, date))).collect(toList());
-
-	}
-
-	private static String getRoleForDate(TreeMap<LocalDate, String> roleMap, LocalDate date) {
-		return roleMap.floorEntry(date) == null ? null : roleMap.floorEntry(date).getValue();
+		TreeMap<LocalDate, String> historyMap = rolesHistory.stream()
+				.collect(Collectors.toMap(DateRole::date, DateRole::role, (v1, v2) -> v2, TreeMap::new));
+		return dates.stream().map(d -> {
+			var entry = historyMap.floorEntry(d);
+			return new DateRole(d, entry == null ? null : entry.getValue());
+		}).toList();
 	}
 
 	public static void displayDigitsStatistics() {
@@ -112,11 +111,9 @@ public class InterviewQuestions {
 		// sorted by counts of occurrences in the descending order
 		// takes 1000000 random numbers in range[0-Integer.MAX_VALUE]
 		// one pipeline with no additional yours methods
-		new Random().ints(N_NUMBERS, 0, Integer.MAX_VALUE).flatMap(n -> String.valueOf(n).chars())
-				.mapToObj(c -> (char) c).collect(Collectors.groupingBy(c -> c, Collectors.counting())).entrySet()
-				.stream().sorted((e, e1) -> e1.getValue().compareTo(e.getValue()))
+		new Random().ints(1_000_000, 0, Integer.MAX_VALUE).boxed().flatMap(n -> Arrays.stream(n.toString().split("")))
+				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting())).entrySet().stream()
+				.sorted(Entry.comparingByValue(Comparator.reverseOrder()))
 				.forEach(e -> System.out.printf("%s -> %d\n", e.getKey(), e.getValue()));
-
 	}
-
 }
