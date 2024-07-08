@@ -82,7 +82,7 @@ public class InterviewQuestions {
 	}
 
 	public static boolean isAnagram(String word, String anagram) {
-		boolean res = true; // Initialize result as true
+		boolean res = true;
         if (word.length() != anagram.length() || Objects.equals(word, anagram)) {
             res = false;
         } else {
